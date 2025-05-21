@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Персонажи Гарри Поттера</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div id="app">
+        <div class="auth-container">
+            <div class="user-info" v-if="currentUser">
+                <span>{{ currentUser.firstName }}!</span>
+                <button class="logout-button" @click="logout">Выйти</button>
+            </div>
+            <div class="auth-buttons" v-else>
+                <button class="auth-button" @click="showLoginModal">Войти</button>
+                <button class="auth-button" @click="showRegisterModal">Регистрация</button>
+            </div>
+        </div>
+        <h1>Персонажи Гарри Поттера</h1>
+        <div class="filters-container">
+            <div class="search-box">
+                <input 
+                    type="text" 
+                    v-model="searchQuery" 
+                    class="search-input">
+            </div>
+            <div class="sort-controls">
+                <label>Сортировка:</label>
+                <select v-model="sortField" class="sort-select">
+                    <option value="name">Имя (А-Я)</option>
+                    <option value="name_desc">Имя (Я-А)</option>
+                    <option value="yearOfBirth">Год рождения (по возрастанию)</option>
+                    <option value="yearOfBirth_desc">Год рождения (по убыванию)</option>
+                    <option value="gender">Пол (Мужской)</option>
+                    <option value="gender_desc">Пол (Женский)</option>
+                </select>
+            </div>
+            <div class="filter-controls">
+                <div class="filter-group">
+                    <label>Статус:</label>
+                    <select v-model="hogwartsFilter" class="filter-select">
+                        <option value="all">Все</option>
+                        <option value="student">Ученики</option>
+                        <option value="staff">Преподаватели</option>
+                        <option value="other">Другие</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Цвет волос:</label>
+                    <select v-model="hairColourFilter" class="filter-select">
+                        <option value="all">Все</option>
+                        <option value="black">Чёрные</option>
+                        <option value="brown">Коричневые</option>
+                        <option value="blonde">Блонд</option>
+                        <option value="red">Рыжие</option>
+                        <option value="white">Белые</option>
+                        <option value="grey">Серые</option>
+                        <option value="unknown">Неизвестно</option>
+                    </select>
+                </div>
+                <button @click="resetFilters" class="reset-button">Сбросить всё</button>
+            </div>
+        </div>
+        <div class="container">
+            <div 
+                class="character-card" 
+                v-for="character in filteredCharacters" 
+                :key="character.id" 
+                @click="openCharacterModal(character)"
+            >
+                <img 
+                    class="character-image" 
+                    :src="character.image || 'https://via.placeholder.com/300x250?text=Нет+изображения'" 
+                    :alt="character.name"
+                >
+                <h2 class="character-name">
+                    {{ character.name }}
+                    <span class="house" :class="character.house" v-if="character.house">
+                        {{ getHouseName(character.house) }}
+                    </span>
+                </h2>
+                
+                <div class="character-info">
+                    <span class="info-label">Вид:</span> 
+                    {{ character.species }}
+                </div>
+                
+                <div class="character-info">
+                    <span class="info-label">Пол:</span> 
+                    {{ getGenderName(character.gender) }}
+                </div>
+                
+                <div class="character-info">
+                    <span class="info-label">Год рождения:</span> 
+                    {{ character.yearOfBirth || 'Неизвестно' }}
+                </div>
+                
+                <div class="character-info">
+                    <span class="info-label">Цвет волос:</span> 
+                    {{ character.hairColour || 'Неизвестно' }}
+                </div>
+                
+                <div class="character-info">
+                    <span class="info-label">Актер:</span> 
+                    {{ character.actor || 'Неизвестно' }}
+                </div>
+
+                <button 
+                    class="favorite-button" 
+                    @click.stop="toggleFavorite(character)"
+                    :class="{ active: isFavorite(character) }"
+                >
+                    {{ isFavorite(character) ? 'Удалить из избранного' : 'Добавить в избранное' }}
+                </button>
+            </div>
+        </div>
+        
+
+        <div id="characterModal" class="modal">
+            <div class="modal-content">
+                <span class="close" @click="closeModal">&times;</span>
+                <div class="modal-character" v-if="selectedCharacter">
+                    <img 
+                        class="modal-character-image" 
+                        :src="selectedCharacter.image || 'https://via.placeholder.com/300x400?text=Нет+изображения'" 
+                        :alt="selectedCharacter.name"
+                    >
+                    <div class="modal-character-info">
+                        <h2 class="modal-character-name">
+                            {{ selectedCharacter.name }}
+                            <span class="house" :class="selectedCharacter.house" v-if="selectedCharacter.house">
+                                {{ getHouseName(selectedCharacter.house) }}
+                            </span>
+                        </h2>
+                        
+                        <div class="modal-info-group">
+                            <span class="modal-info-label">Основная информация:</span>
+                            <p>Вид: {{ selectedCharacter.species || 'Неизвестно' }}</p>
+                            <p>Пол: {{ getGenderName(selectedCharacter.gender) || 'Неизвестно' }}</p>
+                            <p>Дата рождения: {{ selectedCharacter.dateOfBirth || 'Неизвестно' }}</p>
+                            <p>Год рождения: {{ selectedCharacter.yearOfBirth || 'Неизвестно' }}</p>
+                            <p>Происхождение: {{ getAncestryName(selectedCharacter.ancestry) || 'Неизвестно' }}</p>
+                            <p>Цвет глаз: {{ selectedCharacter.eyeColour || 'Неизвестно' }}</p>
+                            <p>Цвет волос: {{ selectedCharacter.hairColour || 'Неизвестно' }}</p>
+                        </div>
+                        
+                        <div class="modal-info-group" v-if="selectedCharacter.wand.wood || selectedCharacter.wand.core || selectedCharacter.wand.length">
+                            <span class="modal-info-label">Информация о палочке:</span>
+                            <p>Дерево: {{ selectedCharacter.wand.wood || 'Неизвестно' }}</p>
+                            <p>Сердцевина: {{ selectedCharacter.wand.core || 'Неизвестно' }}</p>
+                            <p>Длина: {{ selectedCharacter.wand.length ? selectedCharacter.wand.length + '"' : 'Неизвестно' }}</p>
+                        </div>
+                        
+                        <div class="modal-info-group">
+                            <span class="modal-info-label">Магическая информация:</span>
+                            <p>Патронус: {{ selectedCharacter.patronus || 'Неизвестно' }}</p>
+                            <p>Ученик Хогвартса: {{ selectedCharacter.hogwartsStudent ? 'Да' : 'Нет' }}</p>
+                            <p>Преподаватель Хогвартса: {{ selectedCharacter.hogwartsStaff ? 'Да' : 'Нет' }}</p>
+                            <p>Актер: {{ selectedCharacter.actor || 'Неизвестно' }}</p>
+                            <p>Жив: {{ selectedCharacter.alive ? 'Да' : 'Нет' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="loginModal" class="modal">
+            <div class="modal-content">
+                <span class="close" @click="closeModal">&times;</span>
+                <h2>Вход</h2>
+                <form class="auth-form" @submit.prevent="login">
+                    <div class="form-group">
+                        <label class="form-label">Имя пользователя</label>
+                        <input class="form-input" type="text" v-model="loginData.username" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Пароль</label>
+                        <input class="form-input" type="password" v-model="loginData.password" required>
+                    </div>
+                    <button class="form-submit" type="submit">Войти</button>
+                </form>
+            </div>
+        </div>
+        <div id="registerModal" class="modal">
+            <div class="modal-content">
+                <span class="close" @click="closeModal">&times;</span>
+                <h2>Регистрация</h2>
+                <form class="auth-form" @submit.prevent="register">
+                    <div class="form-group">
+                        <label class="form-label">Имя пользователя</label>
+                        <input class="form-input" type="text" v-model="registerData.username" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Пароль</label>
+                        <input class="form-input" type="password" v-model="registerData.password" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Фамилия</label>
+                        <input class="form-input" type="text" v-model="registerData.lastName" required>
+                        <div class="error-message" v-if="registerErrors.lastName">{{ registerErrors.lastName }}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Имя</label>
+                        <input class="form-input" type="text" v-model="registerData.firstName" required>
+                        <div class="error-message" v-if="registerErrors.firstName">{{ registerErrors.firstName }}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Отчество</label>
+                        <input class="form-input" type="text" v-model="registerData.middleName">
+                        <div class="error-message" v-if="registerErrors.middleName">{{ registerErrors.middleName }}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Телефон</label>
+                        <input class="form-input" type="text" v-model="registerData.phone" placeholder="8(XXX)XXX-XX-XX" required>
+                        <div class="error-message" v-if="registerErrors.phone">{{ registerErrors.phone }}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Пол</label>
+                        <select class="form-input" v-model="registerData.gender" required>
+                            <option value="">Выберите пол</option>
+                            <option value="мужской">Мужской</option>
+                            <option value="женский">Женский</option>
+                        </select>
+                        <div class="error-message" v-if="registerErrors.gender">{{ registerErrors.gender }}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Возраст</label>
+                        <input class="form-input" type="number" v-model.number="registerData.age" min="10" required>
+                        <div class="error-message" v-if="registerErrors.age">{{ registerErrors.age }}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Любимые факультеты</label>
+                        <div class="houses-container">
+                            <label class="house-checkbox" v-for="house in houses" :key="house">
+                                <input type="checkbox" v-model="registerData.favoriteHouses" :value="house">
+                                {{ getHouseName(house) }}
+                            </label>
+                        </div>
+                        <div class="error-message" v-if="registerErrors.favoriteHouses">{{ registerErrors.favoriteHouses }}</div>
+                    </div>
+                    <button class="form-submit" type="submit">Зарегистрироваться</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="./app.js"></script>
+</body>
+</html>

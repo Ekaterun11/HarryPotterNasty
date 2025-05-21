@@ -1,0 +1,675 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-image: url(./фон.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    color: #e0e0e0;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #ffffff;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+    margin-bottom: 30px;
+    font-size: 2.2rem;
+}
+
+.filters-container {
+    background: rgba(30, 30, 40, 0.8);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.search-box {
+    margin-bottom: 20px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #444;
+    background-color: rgba(20, 20, 30, 0.9);
+    color: #e0e0e0;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+.search-input:focus {
+    border-color: #ff6b6b;
+    box-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+    outline: none;
+}
+
+.search-hint {
+    font-size: 0.8rem;
+    color: #aaa;
+    margin-top: 5px;
+    text-align: right;
+}
+
+.sort-controls, .filter-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.sort-controls label, .filter-group label {
+    color: #ff9e7d;
+    font-weight: bold;
+}
+
+.sort-select, .filter-select {
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: 1px solid #444;
+    background-color: rgba(20, 20, 30, 0.9);
+    color: #e0e0e0;
+    cursor: pointer;
+}
+
+.sort-select {
+    min-width: 200px;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.reset-button {
+    padding: 8px 15px;
+    border-radius: 5px;
+    border: 1px solid #ff6b6b;
+    background-color: rgba(60, 20, 20, 0.7);
+    color: #e0e0e0;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-left: auto;
+}
+
+.reset-button:hover {
+    background-color: rgba(100, 40, 40, 0.9);
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.character-card {
+    background: rgba(30, 30, 40, 0.8);
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    width: 300px;
+    padding: 20px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+    border: 1px solid #444;
+}
+
+.character-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+    background: rgba(40, 40, 50, 0.9);
+}
+
+.character-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid #ff6b6b;
+    margin-bottom: 15px;
+    transition: transform 0.3s;
+}
+
+.favorite-button {
+    background-color: #ff9e7d;
+    color: #000000;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 10px auto 0;
+    width: 80%;
+    text-align: center;
+    display: block;
+}
+
+.favorite-button:hover {
+    background-color: #ff8a5d;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.favorite-button.active {
+    background-color: #d04d4d;
+    color: white;
+}
+
+.character-card:hover .character-image {
+    transform: scale(1.03);
+    display: flex;
+    flex-direction: column;
+}
+
+.character-name {
+    font-size: 1.5rem;
+    color: #ff9e7d;
+    margin: 0 0 10px 0;
+    text-align: center;
+    font-weight: bold;
+}
+
+.character-info {
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+    color: #d0d0d0;
+}
+
+.info-label {
+    display: inline-block;
+    width: 120px;
+    color: #ff9e7d;
+    font-weight: bold;
+}
+
+.house {
+    padding: 3px 10px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+
+
+.auth-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+}
+
+.auth-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.auth-button {
+    background: linear-gradient(90deg, #ff6b6b, #d04d4d);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.auth-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #ff9e7d;
+    background: rgba(30, 30, 40, 0.8);
+    padding: 8px 15px;
+    border-radius: 5px;
+    border: 1px solid #444;
+}
+
+.logout-button {
+    background: #d04d4d;
+    border: 1px solid #ff6b6b;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.logout-button:hover {
+    background: #ff6b6b;
+}
+
+/* Стили модальных окон */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: rgba(20, 20, 30, 0.95);
+    margin: auto;
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 300px;
+    max-height: 80%;
+    overflow-y: auto;
+    position: relative;
+    border: 2px solid #ff6b6b;
+    box-shadow: 0 0 30px rgba(255, 107, 107, 0.3);
+    font-size: 14px;
+}
+
+.modal-character-info, .modal-info-group {
+    font-size: 14px;
+}
+
+.close {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    color: #ff6b6b;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.close:hover {
+    color: #ff9e7d;
+    transform: scale(1.1);
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-label {
+    color: #ff9e7d;
+    font-weight: bold;
+}
+
+.form-input {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #444;
+    background-color: rgba(30, 30, 40, 0.8);
+    color: #e0e0e0;
+    transition: all 0.3s;
+}
+
+.form-input:focus {
+    border-color: #ff6b6b;
+    box-shadow: 0 0 8px rgba(255, 107, 107, 0.4);
+    outline: none;
+}
+
+.form-submit {
+    background: linear-gradient(90deg, #ff6b6b, #d04d4d);
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.3s;
+}
+
+.form-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.houses-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.house-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #e0e0e0;
+}
+
+.error-message {
+    color: #ff4d4d;
+    font-size: 0.8rem;
+    margin-top: 5px;
+    text-shadow: 0 0 2px #000;
+}
+
+/* Стили модального окна персонажа */
+.modal-character {
+    display: flex;
+    flex-direction: column;
+}
+/* Стили для модальных окон входа и регистрации */
+#loginModal .modal-content, 
+#registerModal .modal-content {
+    background: rgba(20, 20, 30, 0.95);
+    margin: auto;
+    padding: 30px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 400px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    border: 2px solid #ff6b6b;
+    box-shadow: 0 0 30px rgba(255, 107, 107, 0.3);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Заголовки в модальных окнах - теперь сверху */
+#loginModal h2, 
+#registerModal h2 {
+    text-align: center;
+    color: #ff9e7d;
+    margin: 0 0 25px 0; /* Увеличил отступ снизу */
+    font-size: 1.8rem;
+    padding-bottom: 10px;
+   
+    order: -1; /* Перемещаем заголовок в начало flex-контейнера */
+}
+
+/* Формы в модальных окнах */
+#loginModal .auth-form,
+#registerModal .auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Увеличил промежуток между полями */
+}
+
+/* Группы полей формы */
+#loginModal .form-group,
+#registerModal .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Метки полей */
+#loginModal .form-label,
+#registerModal .form-label {
+    color: #ff9e7d;
+    font-weight: bold;
+    font-size: 0.95rem;
+}
+
+/* Поля ввода */
+#loginModal .form-input,
+#registerModal .form-input {
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 1px solid #444;
+    background-color: rgba(30, 30, 40, 0.8);
+    color: #e0e0e0;
+    transition: all 0.3s;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+
+/* Кнопка отправки формы */
+#loginModal .form-submit,
+#registerModal .form-submit {
+    background: linear-gradient(90deg, #ff6b6b, #d04d4d);
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: all 0.3s;
+    width: 100%;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#loginModal .form-submit:hover,
+#registerModal .form-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Контейнер для факультетов в регистрации */
+#registerModal .houses-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: flex-start;
+}
+
+/* Чекбоксы факультетов */
+#registerModal .house-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #e0e0e0;
+    margin: 5px 0;
+    font-size: 0.9rem;
+}
+
+/* Сообщения об ошибках */
+#registerModal .error-message {
+    color: #ff4d4d;
+    font-size: 0.8rem;
+    margin-top: 3px;
+    text-shadow: 0 0 2px #000;
+}
+
+/* Кнопка закрытия */
+#loginModal .close,
+#registerModal .close {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    color: #ff6b6b;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: none;
+    border: none;
+    padding: 5px;
+}
+
+#loginModal .close:hover,
+#registerModal .close:hover {
+    color: #ff9e7d;
+    transform: scale(1.1);
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 480px) {
+    #loginModal .modal-content, 
+    #registerModal .modal-content {
+        width: 95%;
+        padding: 20px;
+    }
+    
+    #loginModal h2, 
+    #registerModal h2 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+    
+    #registerModal .houses-container {
+        flex-direction: column;
+    }
+    
+    #loginModal .form-input,
+    #registerModal .form-input {
+        padding: 10px 12px;
+    }
+}
+.modal-character-image {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid #ff6b6b;
+    margin-bottom: 15px;
+}
+
+.modal-character-name {
+    font-size: 1.5rem;
+    color: #ff9e7d;
+    margin: 0 0 15px 0;
+    text-align: center;
+}
+
+.modal-info-group {
+    margin-bottom: 15px;
+    color: #d0d0d0;
+}
+
+.modal-info-label {
+    display: block;
+    color: #ff6b6b;
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 1rem;
+}
+
+/* Адаптивные стили */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 90%;
+        padding: 15px;
+    }
+    
+    .character-card {
+        width: 100%;
+        max-width: 350px;
+    }
+    
+    .auth-container {
+        position: static;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: center;
+    }
+    
+    .auth-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .auth-button {
+        width: 100%;
+    }
+    
+    .filters-container {
+        padding: 15px;
+    }
+    
+    .sort-controls, .filter-controls {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .reset-button {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+    
+    .sort-select, .filter-select {
+        width: 100%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .modal-content {
+        max-width: 800px;
+        display: flex;
+    }
+    
+    .modal-character {
+        flex-direction: row;
+        gap: 30px;
+    }
+    
+    .modal-character-image {
+        width: 300px;
+        max-height: none;
+    }
+    
+    .modal-character-info {
+        flex: 1;
+    }
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.character-card {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Загрузка */
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    font-size: 1.5rem;
+    color: #ff9e7d;
+}
+
+.loading:after {
+    content: '...';
+    animation: dots 1.5s steps(5, end) infinite;
+}
+
+@keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60%, 100% { content: '...'; }
+}
